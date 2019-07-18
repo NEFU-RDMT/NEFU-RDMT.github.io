@@ -1,37 +1,8 @@
-## Welcome to GitHub Pages
+exam fucker
 
-You can use the [editor on GitHub](https://github.com/examfucker/examfucker.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+一个非盈利性质的复习资源整合维护团队
+	任何人都可以对这个项目进行pull request 
+	但只有项目官方人员可以对pr进行审核合并
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/examfucker/examfucker.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+本项目受清华大学及浙江大学开源项目启发决定立项
+为学生自治项目，接受学校方面监督，但不接受学校任何行政教师力量的干预管理
