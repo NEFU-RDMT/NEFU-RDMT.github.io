@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Date
+{
+    int year;
+    int month;
+    int day;
+};
+union MarriageState
+{
+    int month;
+    char spousename[30];
+    struct Date divorceDay;
+};
+struct person
+{
+    char name[30];
+    int age;
+    int state;
+    union MarriageState mstate;
+};
+int main()
+{
+   struct person p1;
+   printf("please enter your name and age:\n");
+   scanf("%s%d",p1.name,&p1.age);
+   printf("please enter your marriage state:\n");
+   printf("1 for single,2 for married ,3 for divorce or death\n");
+   scanf("%d",&p1.state);
+   switch(p1.state)
+   {
+       case 1:
+          printf("please enter the month of your birthday:\n");
+          scanf("%d",&p1.mstate.month);
+          break;
+        case 2:
+          printf("please enter your spouse name\n");
+          scanf("%s",p1.mstate.spousename);
+          break;
+        case 3:
+          printf("Please enter the day you become single.\n");
+          scanf("%d%d%d",&p1.mstate.divorceDay.year,&p1.mstate.divorceDay.month,&p1.mstate.divorceDay.day);
+          break;
+   }
+
+
+
+
+}

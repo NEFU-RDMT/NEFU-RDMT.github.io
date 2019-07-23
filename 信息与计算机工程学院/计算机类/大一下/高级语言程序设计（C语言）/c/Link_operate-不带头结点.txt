@@ -1,0 +1,374 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define LEN sizeof(struct Link_Node)
+
+//不带头节点的链表操作
+typedef struct Link_Node
+{
+    int data;
+    struct Link_Node * next;
+} node;
+void output(node *p);
+void outputs(node *pHead);
+void input(node *p);
+node * CreateLinkTail(int n);
+node * CreateLinkHead(int n);
+node * CreateSortedLink(int n);
+int Search(node *pHead,int a);
+int Update(node *pHead,int old,int xin);
+node * Insert(node *pHead,node *pNew);
+int length(node *pHead);
+void sort(node *pHead);
+void clear(node *pHead);
+node * UnionLink(node *pHead,node *qHead);
+void DelDua(node *pHead);
+
+
+void output(node *p)
+{
+    printf("%d ",p->data);
+}
+void outputs(node *pHead)
+{
+    if(pHead==NULL ) return;
+    node *p=pHead;
+    while(p)
+    {
+        output(p);
+        p=p->next;
+    }
+    printf("\n");
+}
+void input(node *p)
+{
+    scanf("%d",&p->data);
+}
+node * CreateLinkTail(int n)
+{
+
+    node *pTail=NULL,*pNew,*pHead=NULL;
+    int i;
+
+    if(n==0) return pHead;
+
+    for(i=0; i<n; i++)
+    {
+        pNew=(node *)malloc(LEN);
+        if(pNew==NULL) exit(1);
+        input(pNew);
+        if(i==0)
+        {
+            pHead=pNew;
+            pTail=pHead;
+            pNew->next=NULL;
+        }
+        else
+        {
+            pNew->next=NULL;
+            pTail->next=pNew;
+            pTail=pNew;
+        }
+    }
+    return pHead;
+}
+node * CreateLinkHead(int n)
+{
+    node *pHead=NULL,*pNew;
+    int i;
+    if(n==0) return pHead;
+
+    for(i=0; i<n; i++)
+    {
+        pNew=(node *)malloc(LEN);
+        if(pNew==NULL) exit(1);
+        input(pNew);
+
+        pNew->next=pHead;
+        pHead=pNew;
+    }
+    return pHead;
+}
+node * CreateSortedLink(int n)
+{
+    int i;
+    node * pNew,*pHead=NULL;
+
+    for(i=0; i<n; i++)
+    {
+
+        pNew=(node *)malloc(LEN);
+        if(pNew==NULL) exit(1);
+        input(pNew);
+        pHead=Insert(pHead,pNew);
+    }
+    return pHead;
+}
+int Search(node *pHead,int a)
+{
+    if(pHead==NULL) return 0;
+    node *p=pHead;
+    while(p)
+    {
+        if(p->data==a) return 1;
+        p=p->next;
+    }
+    return 0;
+}
+int Update(node *pHead,int old,int xin)
+{
+    int n=0;//n表示修改节点的数量
+    if(pHead==NULL) return n;
+    node *p=pHead;
+    while(p)
+    {
+        if(p->data==old)
+        {
+            p->data=xin;
+            n++;
+        }
+        p=p->next;
+    }
+    return n;
+}
+node * Insert(node *pHead,node *pNew)
+{
+    //从大到小
+    //寻找插入位置，即pLast和p之间，p为第一个指向的值比pNew->data小的，
+    //也就是当p->data大于pNew->data时，p和pLast前进一个节点。
+    node *pLast=NULL,*p;
+    if(pHead==NULL)//如果当前链表为空，则直接添加即可
+    {
+        pHead=pNew;
+        pNew->next=NULL;
+        return pHead;
+    }
+    else   //如果非空
+    {
+        if(pHead->data<pNew->data) //如果需要添加到链表首部
+        {
+            pNew->next=pHead;
+            pHead=pNew;
+            return pHead;
+        }
+        else
+        {
+            //查找插入位置
+            pLast=pHead;
+            p=pLast->next;
+            while(p && p->data>pNew->data)
+            {
+                pLast=p;
+                p=p->next;
+            }
+            if(p==NULL)//数据太小，需要插入到链表尾部
+            {
+                pLast->next=pNew;
+                pNew->next=NULL;
+            }
+            else   //插入到pLast和p之间
+            {
+                pNew->next=p;
+                pLast->next=pNew;
+            }
+            return pHead;
+        }
+    }
+}
+node * Dele(node *pHead,int a) //删除
+{
+    //有可能删除头结点，因此需要返回头结点指针
+
+    if(pHead==NULL) return pHead;
+    node *pLast=NULL,*p=pHead;
+    while(p)
+    {
+        if(p->data==a)//p为要删除的节点
+        {
+            if(p==pHead)//需要删除头节点
+            {
+                pHead=pHead->next;
+                free(p);
+                p=pHead;
+            }
+            else
+            {
+                pLast->next=p->next;
+                free(p);
+                p=pLast->next;
+            }
+        }
+        else    //p不是要删除的结点
+        {
+            pLast=p;
+            p=p->next;
+        }
+    }
+    return pHead;
+}
+int length(node *pHead)
+{
+    node *p;
+    int n=0;
+    if(pHead==NULL) return n;
+    p=pHead;
+    while(p)
+    {
+        n++;
+        p=p->next;
+    }
+    return n;
+}
+void sort(node *pHead)
+{
+    //从大到小
+
+    node *pLast,*p;
+    int i,j,n=length(pHead),t;
+    if(n<=1) return ;
+    for(i=0; i<n-1; i++)
+    {
+        pLast=pHead;
+        p=pLast->next;
+        for(j=0; j<n-i-1; j++)
+        {
+            if(pLast->data<p->data)
+            {
+                t=pLast->data;
+                pLast->data=p->data;
+                p->data=t;
+            }
+            pLast=p;
+            p=p->next;
+        }
+    }
+}
+void clear(node *pHead)
+{
+    if(pHead==NULL) return;
+    node *p;
+    while(pHead)
+    {
+        p=pHead->next;
+        free(pHead);
+        pHead=p;
+    }
+}
+node * UnionLink(node *pHead,node *qHead)
+{
+    //每一个都加到pHead最后
+    node * uHead=NULL,*uTail=NULL,*pNew;
+    node *p=pHead;//找到p链表的第一个元素，然后依次将其插入uHead后面
+    while(p!=NULL)
+    {
+        if(Search(uHead,p->data)==0)
+        {
+            pNew=(node *)malloc(LEN);
+            if(pNew==NULL) exit(1);
+            pNew->data=p->data;
+            pNew->next=NULL;
+            if(uHead==NULL)
+            {
+                uHead=pNew;
+                uTail=pNew;
+            }
+            else
+            {
+                uTail->next=pNew;
+                uTail=pNew;
+            }
+        }
+        p=p->next;
+    }
+    p=qHead;
+    while(p)
+    {
+        if(Search(uHead,p->data)==0)
+        {
+            pNew=(node *)malloc(LEN);
+            if(pNew==NULL) exit(1);
+            pNew->data=p->data;
+            pNew->next=NULL;
+            if(uHead==NULL)
+            {
+                uHead=pNew;
+                uTail=pNew;
+            }
+            else
+            {
+                uTail->next=pNew;
+                uTail=pNew;
+            }
+        }
+        p=p->next;
+    }
+    return uHead;
+}
+void DelDua(node *pHead)
+{
+    //去除重复节点
+    if(pHead==NULL || pHead->next==NULL) return;
+    node *p, *q,*qLast;
+    p=pHead;
+    while(p->next!=NULL)
+    {
+        qLast=p;
+        q=p->next;
+        while(q)
+        {
+          if(q->data==p->data)
+          {
+              qLast->next=q->next;
+              free(q);
+              q=qLast->next;
+          }else
+          {
+              qLast=q;
+              q=q->next;
+          }
+        }
+        p=p->next;
+    }
+}
+
+int main()
+{
+    node * pHead=NULL,*qHead=NULL,*uHead=NULL;
+    int n,i,a,old,xin;
+    scanf("%d",&n);
+    //pHead=CreateLinkHead(n);
+    pHead=CreateLinkTail(n);
+    //qHead=CreateLinkTail(n);
+
+    outputs(pHead);
+    /*scanf("%d%d",&old,&xin);
+    if(Search(pHead,old)==1)
+    {
+        Update(pHead,old,xin);
+    }else
+    printf("要修改的节点不存在！\n");
+    */
+
+    //outputs(qHead);
+    /* scanf("%d",&a);
+     if(Search(pHead,a)==1)
+     pHead=Dele(pHead,a);
+     else
+     printf("要删除的节点不存在!\n");*/
+
+
+    //uHead=UnionLink(pHead,qHead);
+    //pHead=CreateSortedLink(n);
+    //if(pHead==NULL) exit(1);
+
+    //sort(pHead);
+    DelDua(pHead);
+    
+    outputs(pHead);
+
+    clear(pHead);
+    //clear(qHead);
+    //clear(uHead);
+    return 0;
+}
