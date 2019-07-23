@@ -1,0 +1,279 @@
+#include <cstdlib>
+#include <iostream>
+
+using namespace std;
+
+typedef struct student
+{
+    int num;
+    char name[20];
+    int foxscore;
+    int cscore;
+    int englishscore;
+    int data;
+    int total;
+    struct student *next;
+}STU,*stu;
+
+int m=0;
+stu studentinit()
+{stu L;
+L=(STU*)malloc(sizeof(STU));
+ if(L=NULL)
+  {printf("没有足够的内在空间!\n");
+   exit(0);
+}
+L->next=NULL;
+return L;
+        }
+
+stu studentcreate()
+{stu L;
+ stu p;
+int x;
+char name[20];
+int fox;
+int c;
+int english;
+ L=(STU*)malloc(sizeof(STU));
+ L->next=NULL;
+ printf("请输入学生的学号，输0退出\n");
+ while(scanf("%d",&x)&&x!=0)
+   {p=(STU*)malloc(sizeof(STU));
+    p->num=x;
+    printf("请输入学生姓名\n");
+    scanf("%s",p->name);
+
+    printf("请输入fox成绩\n");
+    cin>>fox;
+    p->foxscore=fox;
+    printf("请输入C成绩\n");
+    cin>>c;
+    p->cscore=c;
+    printf("请输入English成绩\n");
+    cin>>english;
+    p->englishscore=english;
+    p->total=p->foxscore+p->cscore+p->englishscore;
+    p->next=L->next;
+    L->next=p;
+    m++;
+    
+     printf("请输入学生的学号，输0退出\n");             
+               }
+     
+     return L;                       
+        }
+
+void stuoutput(stu L)
+{stu p;
+p=L->next;
+while(p)
+{
+cout<<"*************************"<<endl;
+cout<<"*学生的学号是：         *"<<p->num<<endl;
+cout<<"*学生的姓名是：         *"<<p->name<<endl;
+cout<<"*学生的fox成绩是：      *"<<p->foxscore<<endl;
+cout<<"*学生的c成绩是：        *"<<p->cscore<<endl;
+cout<<"*学生的English成绩是：  *"<<p->englishscore<<endl; 
+cout<<"*学生的总成绩是         *"<<p->total<<endl;
+cout<<"*************************"<<endl;
+
+ p=p->next;
+        }
+     }
+     
+
+          
+     
+ stu stuinsert(stu L)
+ {stu p;
+  int x;
+  char name[20];
+  int fox;
+  int c;
+  int english;
+
+ printf("请输入学生的学号，输0退出\n");
+ scanf("%d",&x);
+  p=(STU*)malloc(sizeof(STU));
+   p->num=x;
+    cout<<"请输入学生姓名"<<endl;
+    scanf("%s",p->name);
+
+    cout<<"请输入fox成绩"<<endl;
+    cin>>fox;
+    p->foxscore=fox;
+    cout<<"请输入C成绩\n"<<endl;
+    cin>>c;
+    p->cscore=c;
+    cout<<"请输入English成绩"<<endl;
+    cin>>english;
+    p->englishscore=english;
+    p->total=p->foxscore+p->cscore+p->englishscore;
+    p->next=L->next;
+    L->next=p;
+    m++;
+ return L;
+     }    
+     
+     
+ stu studel(stu L)
+ {stu p,pre;
+ pre=L;
+  int num;
+  printf("请输入要删除的学生的学号\n");
+  cin>>num;
+   while(pre->next)
+  { if(pre->next->num==num)
+   {p=pre->next;pre->next=p->next;
+   m--;}
+   else {pre=pre->next;}
+     }    
+    return L; 
+     }
+
+     
+void stuquery(stu L)
+{ stu p;
+  p=L->next;
+  int x;
+  cout<<"请输入要查询的学生的学号\n"<<endl;
+  cin>>x;
+  
+  while(p->num!=x)
+  p=p->next;
+
+cout<<"*************************"<<endl;
+cout<<"*学生的学号是：         *"<<p->num<<endl;
+cout<<"*学生的姓名是：         *"<<p->name<<endl;
+cout<<"*学生的fox成绩是：      *"<<p->foxscore<<endl;
+cout<<"*学生的c成绩是：        *"<<p->cscore<<endl;
+cout<<"*学生的English成绩是：  *"<<p->englishscore<<endl; 
+cout<<"*学生的总成绩是         *"<<p->total<<endl;
+cout<<"*************************"<<endl;
+
+ 
+     }
+ void stupaixu(stu L)
+{ 
+     int i=0;
+     int a;
+     stu p,r,s,q;
+     p=r=s=q=L;
+     if(L==NULL)
+     cout<<"学生管理系统没有存储信息，请先录入!"<<endl;
+     cout<<"请选择排序方式"<<endl;
+     cout<<"1 按总成绩升序排列"<<endl;
+     cout<<"2 按总成绩降序排列"<<endl;
+     cin>>a;
+     if(a==1)
+                  { while(i<m-1)
+                   {p=s->next;q=p->next;
+                   while(q!=NULL)
+                     {if(p->total>q->total)
+               {s->next=q;p->next=q->next;q->next=p;
+                   if(p->next!=NULL)
+               {s=s->next; q=p->next; }
+               if(p->next==NULL)
+                     break;
+                  }
+               if(p->total<=q->total)
+                { s=s->next; p=q;q=q->next;
+                     } }
+                i++;}}
+                
+            if(a==2)
+                  { while(i<m-1)
+                   {s=L;
+                        p=s->next;
+                        q=p->next;
+                   while(q!=NULL)
+                    { if(p->total<q->total)
+               {
+                     s->next=q;
+                     p->next=q->next;
+                     q->next=p;
+                   if(p->next!=NULL)
+               {
+                     s=s->next;
+                     q=p->next; }
+               if(p->next==NULL)
+                     break;
+                  }
+               if(p->total>=q->total)
+                {
+                   s=s->next;
+                    p=q;
+                  q=q->next;
+                     }
+                }
+                i++;
+                          
+                            }}
+                           
+                stuoutput(L);    
+                                 }      
+
+void clear()
+{
+     getchar();
+     system("cls");
+     }
+
+int main(int argc, char *argv[])
+{ 
+ stu L;
+int a;
+char w;
+system("color 8e");
+while(1)
+{
+cout<<"                 **********************************"<<endl;
+cout<<"                 *欢迎光临东北林业大学学生管理系统*"<<endl;
+cout<<"                 *       创建人:边莉  20060777    *"<<endl;
+cout<<"                 *请选择你所需要的操作:           *"<<endl;
+cout<<"                 *1 数据录入     5 查找人员       *"<<endl;
+cout<<"                 *2 显示输出     6 成绩排序       *"<<endl;
+cout<<"                 *3 增加人员     7 退出           *"<<endl;
+cout<<"                 *4 删除人员                      *"<<endl;
+cout<<"                 **********************************"<<endl;
+cin>>a;
+clear();
+
+switch(a)
+{ 
+case 1:
+     
+     L= studentcreate();
+     break;
+case 2:
+   stuoutput( L);
+   break;
+case 3:
+  L=stuinsert( L);
+   stuoutput( L);
+   break;
+case 4:
+    L=studel(L);
+    cout<<"删除后学生管理系统中的信息:"<<endl; 
+     stuoutput( L);
+     break;
+case 5: 
+     stuquery( L);
+     break;
+
+case 6:
+     stupaixu(L);
+      break;   
+case 7:
+      exit(0);
+      break;
+              }
+      cout<<"你还想进行其它操作吗?(y/n)"<<endl;
+      cin>>w;
+      if(w='y') continue;
+      if(w='n') break;
+      }
+ system("PAUSE");
+    return EXIT_SUCCESS; 
+}

@@ -1,0 +1,74 @@
+#include "stdio.h"
+#include "stdlib.h"
+typedef struct Node
+ { int info;
+   struct Node *next;
+ }Dlink;
+ Dlink *create(Dlink *head,int n)
+ { Dlink *p,*q;
+   int i;
+   q=(Dlink*)malloc(sizeof(Dlink));
+   head=(Dlink*)malloc(sizeof(Dlink));
+   q=(Dlink*)malloc(sizeof(Dlink));
+   if(q==NULL) return NULL;
+   head->next=q;
+   q->info=1;
+   q->next=head->next;
+   if(n==1) return head;
+   for(i=2;i<n+1;i++)
+   {
+     p=(Dlink*)malloc(sizeof(Dlink)); 
+     if(p==NULL) return NULL;
+     p->info=i;
+     p->next=q->next;
+     q->next=p;
+     q=p;
+   }
+
+   return head;
+ }
+ void josephus(Dlink *head,int m)
+ { Dlink *p,*pre;
+   int i;
+   pre=head; 
+   p=pre->next;
+   printf("\n");
+   if(m==1)
+   {  p=head->next;
+     do
+	 { 
+     p=p->next;
+	 }while(p->next!=head->next);
+	 printf("猴子的大王是:%d\n",p->info);
+   }
+   else{
+   while(p!=p->next)
+   { i=1;
+	do
+	{ pre=p;
+	  p=p->next;
+	  i++;
+	}while(i<m);
+      printf("本次的失败者是%d\n",p->info);
+     pre->next=p->next;
+     free(p);
+     p=pre->next;
+   }
+   printf("猴子的大王是:%d\n",p->info);
+   }
+   free(p);
+ }
+ int main()
+ { Dlink *head;
+   int n,m;
+   printf("请输入猴子总数 ");
+   scanf("%d",&n);
+   printf("请输入淘太者的号 ");
+   scanf("%d",&m);
+   head=create(head,n);
+   if(head!=NULL)
+	  josephus(head,m);
+   else printf("Out of space!\n");
+   return 0;
+ }
+

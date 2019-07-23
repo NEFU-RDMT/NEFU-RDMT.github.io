@@ -1,0 +1,127 @@
+#include "stdio.h"
+#include "stdlib.h"
+#define MaxLength 10
+typedef struct BiNode
+{int data;
+  struct BiNode *lchild,*rchild;
+ }BiNode,*BiTree;
+BiTree CreateBiTree()
+{BiTree T;
+char ch;
+scanf("%c",&ch);
+if(ch=='#')
+T=NULL;
+else
+{T=(BiNode *)malloc(sizeof(BiNode));
+T->data=ch;
+T->lchild=CreateBiTree();
+T->rchild=CreateBiTree();
+}
+return T;
+}
+void PreOrderTraverse(BiTree T){//先序遍历 
+if(T){ 
+printf("%c ",T->data); 
+PreOrderTraverse(T->lchild); 
+PreOrderTraverse(T->rchild); 
+} 
+} 
+void InorderTraverse(BiTree T)//中序遍历 
+{
+ if(T)
+ {InorderTraverse(T->lchild);
+ printf("%c ",T->data);
+ InorderTraverse(T->rchild);
+  }
+   }
+void PostOrderTraverse(BiTree T){//后序遍历 
+if(T){ 
+PostOrderTraverse(T->lchild); 
+PostOrderTraverse(T->rchild); 
+printf("%c ",T->data);
+} 
+} 
+
+
+void Inorder(BiTree T)   //非递归中序遍历 
+{
+int top=0;
+BiTree s[14],p;
+p=T;
+
+while(p!=NULL||top!=0)
+{
+while(p!=NULL)
+{s[++top]=p;p=p->lchild;}
+if(top!=0)
+{p=s[top--]; printf("%c ",p->data); p=p->rchild;}
+}
+}
+int Height(BiTree bt)
+{int hl,hr;
+ if(bt==NULL)
+  return(0);
+  else{hl=Height(bt->lchild);
+	   hr=Height(bt->rchild);
+	   if(hl>hr)
+		  return(hl+1);
+		  else return(hr+1);
+		  }
+		  }
+int Leaves(BiTree T)
+{int n;
+if(!T) n=0;
+else
+ if(!T->lchild&&!T->rchild) n=1;
+ else n=Leaves(T->lchild)+Leaves(T->rchild);
+ return(n);
+
+}
+void LevelOrderTraverse(BiTree T)
+{
+BiTree Q[10]; 
+int front=0,rear=0; 
+BiTree p; 
+if(T){ //根结点入队 
+Q[rear]=T; 
+rear=(rear+1)%10; 
+} 
+while(front!=rear){ 
+p=Q[front]; 
+front=(front+1)%10;
+printf("%c ",p->data); 
+if(p->lchild){ //左孩子不为空，入队 
+Q[rear]=p->lchild; 
+rear=(rear+1)%10; 
+} 
+if(p->rchild){ //右孩子不为空，入队 
+Q[rear]=p->rchild; 
+rear=(rear+1)%10; 
+} 
+} 
+
+} 
+int main()
+{BiTree T; int h,f;
+T=CreateBiTree();
+printf("先序遍历二叉树:\n");
+PreOrderTraverse(T);
+printf("\n中序遍历二叉树:\n");
+ InorderTraverse(T);
+printf("\n后序遍历二叉树:\n"); 
+PostOrderTraverse(T); 
+printf("\n非递归中序遍历二叉树:\n");
+Inorder(T);
+ printf("\n高度是:\n");
+ h=Height(T);
+ printf("%d\n",h);
+ printf("叶子数是:\n");
+ f=Leaves(T);
+ printf("%d\n",f);
+ printf("层次遍历二叉树:\n");
+  LevelOrderTraverse(T);
+     system("PAUSE");
+    return EXIT_SUCCESS;
+                
+}
+ 

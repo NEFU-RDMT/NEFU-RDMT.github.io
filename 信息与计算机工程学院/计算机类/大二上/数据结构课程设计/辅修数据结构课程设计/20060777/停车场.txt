@@ -1,0 +1,232 @@
+#include <cstdlib>
+#include <iostream>
+#define MAXSIZE 5
+using namespace std;
+
+typedef struct
+{
+         int data[MAXSIZE];
+         int top;
+        }SeqStack;
+typedef struct LQNode
+{
+        int data;
+        struct LQNode *next;
+        }LQNode,*LinkedQNode;
+typedef struct 
+{
+        struct LQNode *front,*rear;
+        }LQueue,*LinkedQueue;
+SeqStack SeqStackInit()
+{
+         SeqStack S;
+         S.top=-1;
+         return S;
+         }
+LinkedQueue LinkedQueueInit()
+{
+            LinkedQueue Q;
+            LinkedQNode p;
+            Q=(LQueue *)malloc(sizeof(LQueue));
+            p=(LQNode *)malloc(sizeof(LQNode));
+            p->next=NULL;
+            Q->front=Q->rear=p;
+            return Q;
+            }
+void LinkedQueueIn(LinkedQueue Q,int x)
+{
+     LinkedQNode p;
+     p=(LQNode *)malloc(sizeof(LQNode));
+     p->data=x;
+     p->next=NULL;
+     Q->rear->next=p;
+     Q->rear=p;
+     }
+int LinkedQueueEmpty(LinkedQueue Q)
+{
+    if(Q->front==Q->rear)
+    return 1;
+    else return 0;
+}
+int LinkedQueueOut(LinkedQueue Q)
+{
+    LinkedQNode p;
+    int x;
+    if(Q->front!=Q->rear)
+    {
+      p=Q->front->next;
+      Q->front->next=p->next;
+      x=p->data;
+      free(p);
+      if(Q->front->next==NULL)
+      Q->rear=Q->front;
+      return x;
+      }
+      }
+      
+SeqStack comein(LinkedQueue Q)
+{
+     SeqStack s;
+     s=SeqStackInit();
+     int a;
+    cin>>a;
+     while(s.top!=MAXSIZE-1&&a!=0)
+     {
+       s.top++;
+       s.data[s.top]=a;
+      printf("%d号车辆进入停车场\n",a);
+       cin>>a;
+       }
+       if(s.top==MAXSIZE-1)
+       {
+       while(a!=0)
+       {LinkedQueueIn(Q,a);
+       printf("停车场已满,%d号车辆在便道等候!\n",a);
+       cin>>a;
+       }}
+       return s;
+       }
+SeqStack likai(SeqStack s,LinkedQueue Q,int x)
+{ SeqStack K;
+   int a; 
+ K=SeqStackInit();
+ while(s.top!=-1&&s.data[s.top]!=x)
+  {   
+     a=s.data[s.top];
+     s.top--; 
+      K.top++;
+     K.data[K.top]=a;
+     }//其它车辆为该车辆离开停车场让步 
+      
+    if(s.top==-1) 
+     cout<<"请重新输入，停车场内没有此辆车!!"<<endl;//没有该车辆 
+    
+    else 
+     if(s.data[s.top]==x) 
+      { a=s.data[s.top];
+        s.top--; 
+      cout<<a<<"号车离开停车场"<<endl; 
+       }//找到指定车辆并离开
+        
+     while(K.top!=-1) 
+    { 
+      a=K.data[K.top];
+       K.top--; 
+      s.top++;
+      s.data[s.top]=a;
+        } //其它让步车辆按原顺序返回停车场 
+    while(s.top!=MAXSIZE-1&&!LinkedQueueEmpty(Q))
+    {   a=LinkedQueueOut(Q);
+      s.top++;
+      s.data[s.top]=a;
+       cout<<a<<"号车从便道进入停车场"<<endl;
+       }
+      return s; 
+  
+}
+void SeqStackchakan(SeqStack s)
+{
+   if(s.top!=MAXSIZE-1)
+      cout<<"停车场还有"<<MAXSIZE-1-s.top<<"个空位,欢迎车辆进入!"<<endl;
+   if(s.top==MAXSIZE-1)
+     cout<<"对不起，停车场已满，请其它车辆在便道等候"<<endl;
+      cout<<"目前停车场中停的车辆为："<<endl;
+   while(s.top!=-1)
+{printf("%d号汽车\n ",s.data[s.top]);
+s.top--;}
+
+}
+void LinkedQueuechakan(LinkedQueue Q)
+{
+     if(Q->front==Q->rear)
+     cout<<"便道上没有汽车等候进入停车场"<<endl;
+     else
+     
+{LinkedQNode p;
+cout<<"便道上有如下汽车等候进入停车场"<<endl;
+p=Q->front->next;
+while(p)
+{printf("%d号汽车\n",p->data);
+p=p->next;
+
+}}
+}
+SeqStack xinchecoming(SeqStack s,LinkedQueue Q,int x)
+  {   
+      if(s.top<MAXSIZE-1)
+       {  s.top++;
+         s.data[s.top]=x;
+        cout<<x<<"号车已进入停车场！"<<endl; 
+         }
+        
+  else
+       {
+       LinkedQueueIn(Q,x);
+       printf("停车场已满,%d号车辆在便道等候!\n",x);
+       }
+       return s;   
+     }
+void clear()
+{
+     getchar();
+     system("cls");
+     }
+int main(int argc, char *argv[])
+{ SeqStack s;
+LinkedQueue Q;
+s=SeqStackInit();
+Q=LinkedQueueInit();
+int a,b,c;
+char w;
+system("color 2f");
+while(1)
+{cout<<"                     请输入您要选择的操作       " <<endl;
+cout<<"                &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<endl;
+cout<<"                &&&&      停车场管理系统      &&&&"<<endl;
+cout<<"                &&&&            制作人：边莉  &&&&"<<endl;
+cout<<"                &&&&            学号：20060777&&&&"<<endl;
+cout<<"                &&&& 1->进入停车场            &&&&"<<endl;
+cout<<"                &&&& 2->离开停车场            &&&&"<<endl;
+cout<<"                &&&& 3->查看停车场状态        &&&&"<<endl;
+cout<<"                &&&& 4->查看便道状态          &&&&"<<endl;
+cout<<"                &&&& 5->新车进入              &&&&"<<endl;
+cout<<"                &&&& 6->退出管理              &&&&"<<endl;
+cout<<"                &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<endl;
+cin>>a;
+clear();
+switch(a)
+{
+         case 1:
+              cout<<"请输入进入停车场的车辆："<<endl;
+              s=comein(Q);
+              break;
+             
+         case 2:
+              cout<<"请输入要离开停车场的车辆:"<<endl;
+              cin>>b;
+              s=likai(s,Q,b);
+              break;
+         case 3:
+              SeqStackchakan(s);
+              break;
+         case 4:
+              LinkedQueuechakan(Q);
+              break;
+         case 5:
+              cout<<"请输入新进入的车辆："<<endl;
+              cin>>c;
+              s=xinchecoming(s,Q,c);
+              break;
+         case 6:
+               exit(0);
+               }
+              
+    cout<<"是否要进行其它操作?(y/n)"<<endl;
+    cin>>w;
+    if(w='y') continue;
+    if(w='n') break;
+}              
+
+    system("PAUSE");
+    return EXIT_SUCCESS;
+}

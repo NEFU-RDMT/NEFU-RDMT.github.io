@@ -1,0 +1,279 @@
+
+#include<stdlib.h> 
+#include<stdio.h> 
+#include<string.h>
+
+ 
+typedef int EdgeData;              
+typedef struct message
+{
+	int num;
+	char name[100];
+	char pro[500];
+}Ciceroni;
+
+typedef struct Msg{		
+         Ciceroni  school[10];   
+         EdgeData edge[10][10];
+         int n, e;    
+}MTGraph; 
+
+
+void  CreateMTGragh(MTGraph *G) ;
+void Menu();
+void LookAllLookAllLookAll(MTGraph *G) ;
+void ShortPath(MTGraph * G) ;
+void Floyd(MTGraph *G) ;
+void Search(MTGraph *G);
+
+
+
+void main() 
+{ 
+ int i; 
+ MTGraph G;
+ CreateMTGragh(&G);
+ Menu();
+scanf("%d",&i); 
+while(i!=5) 
+{ 
+switch(i) 
+{ 
+case 1:LookAllLookAllLookAll(&G);Menu();break; 
+case 2:ShortPath(&G);Menu();break; 
+case 3:Floyd(&G);Menu();break; 
+case 4:Search(&G);Menu();break; 
+case 5:exit(1);break; 
+default:break; 
+} 
+scanf("%d",&i); 
+} 
+} 
+
+
+void  CreateMTGragh(MTGraph *G) 
+{   int i,j;
+    G->n=10;
+	G->e=13;
+ for(i=1;i<=G->n;i++) 
+     G->school[i-1].num=i; 
+     strcpy(G->school[0].name,"行政楼"); 
+	strcpy(G->school[0].pro,""); 
+	strcpy(G->school[1].name,"食堂"); 
+	strcpy(G->school[1].pro,""); 
+	strcpy(G->school[2].name,"赛博楼"); 
+	strcpy(G->school[2].pro,"信息分院办公室所在地"); 
+	strcpy(G->school[3].name,"求是楼"); 
+	strcpy(G->school[3].pro,"实验楼计算机中心校医院"); 
+	strcpy(G->school[4].name,"格致楼"); 
+	strcpy(G->school[4].pro,"法学管理学院"); 
+	strcpy(G->school[5].name,"工程实习中心"); 
+	strcpy(G->school[5].pro,"金工实习"); 
+	strcpy(G->school[6].name,"仰仪楼"); 
+	strcpy(G->school[6].pro,"机电计测分院"); 
+	strcpy(G->school[7].name,"体育馆"); 
+	strcpy(G->school[7].pro,"旁边有篮球场`足球场`还有网球场"); 
+	strcpy(G->school[8].name,"一号教学楼"); 
+	strcpy(G->school[8].pro,"主要以阶梯教室为主"); 
+	strcpy(G->school[9].name,"二号教学楼"); 
+	strcpy(G->school[9].pro,"小教室为多"); 
+
+  for (i=0; i<G->n; i++)
+     for (j=0;j<G->n;j++)
+         G->edge[i][j]=10000;                   
+   
+     G->edge[0][1]=500;
+     G->edge[1][0]=500;
+	 G->edge[1][4]=600;
+     G->edge[4][1]=600;
+	 G->edge[4][5]=200;
+     G->edge[5][4]=200;
+	 G->edge[1][3]=100;
+	 G->edge[3][1]=100;
+     G->edge[3][5]=400;
+	 G->edge[5][3]=400;
+	 G->edge[0][3]=300; 
+	 G->edge[3][0]=300;
+     G->edge[0][2]=800;
+	 G->edge[2][0]=800;
+	 G->edge[2][7]=100;
+	 G->edge[7][2]=100;
+     G->edge[7][3]=200;
+	 G->edge[3][7]=200;
+	 G->edge[7][8]=300;
+     G->edge[8][7]=300;
+     G->edge[6][3]=200;
+	 G->edge[3][6]=200;
+	 G->edge[6][8]=100;
+     G->edge[8][6]=100;
+	 G->edge[5][8]=200;
+     G->edge[8][5]=200;
+} 
+
+
+
+
+void Menu() 
+{ 
+printf("\n    导游图\n"); 
+printf(" **************************\n"); 
+printf("  1.浏览全景 \n"); 
+printf("  2.查看所有游览路线 \n"); 
+printf("  3.选择出发点和目的地 \n"); 
+printf("  4.查看景点信息 \n"); 
+printf("  5.退出系统 \n"); 
+printf(" ***************************\n"); 
+ 
+} 
+
+	
+
+void LookAllLookAllLookAll(MTGraph *G) 
+{ 
+int v; 
+printf("********************************************************************************\n"); 
+printf("|编号|景点名称        |简介 \n"); 
+for(v=0;v<10;v++) 
+printf("|%-4d|%-16s|%-56s\n",G->school[v].num,G->school[v].name,G->school[v].pro); 
+printf("********************************************************************************\n"); 
+} 
+
+
+void ShortPath(MTGraph * G) 
+{ 
+	int v,w,i,min,t=0,x,flag=1,v0; 
+	int final[20], D[20], p[20][20]; 
+	while(flag) 
+		{ 
+			printf("请输入一个起始景点编号:"); 
+			scanf("%d",&v0); 
+			if(v0<0||v0>9) 
+			{ 
+				printf("景点编号不存在!请重新输入景点编号:"); 
+				scanf("%d",&v0); 
+			} 
+			if(v0>=0&&v0<10) 
+			flag=0; 
+		} 
+	for(v=0;v<10;v++) 
+	{ 
+		final[v]=0; 
+		D[v]=G->edge[v0][v]; 
+		for(w=0;w<10;w++) 
+			p[v][w]=0; 
+		if(D[v]<10000) 
+			{ 
+			p[v][v0]=1;p[v][v]=1; 
+			} 
+	} 
+	D[v0]=0;final[v0]=1; 
+	for(i=1;i<10;i++) 
+		{ 
+			min=10000; 
+			for(w=0;w<10;w++) 
+			if(!final[w]) 
+			if(D[w]<min){v=w;min=D[w];} 
+			final[v]=1; 
+			for(w=0;w<10;w++) 
+				if(!final[w]&&(min+G->edge[v][w]<D[w])) 
+				{ 
+					D[w]=min+G->edge[v][w]; 
+					for(x=0;x<10;x++) 
+						p[w][x]=p[v][x]; 
+						p[w][w]=1; 
+				}		
+		} 
+	for(v=0;v<10;v++) 
+	{ 
+	if(v0!=v) printf("%s",G->school[v0].name); 
+	for(w=0;w<10;w++) 
+	{ 
+	if(p[v][w]&&w!=v0) printf("-->%s",G->school[w].name); 
+	t++; 
+	} 
+	if(t>10-1&&v0!=v)printf(" 总路线长%dm\n\n",D[v]); 
+	} 
+	}
+
+
+
+
+
+void Floyd(MTGraph *G) 
+{ 
+	int v,u,i,w,k,j,flag=1,p[10][10][10],D[10][10]; 
+	for(v=0;v<10;v++) 
+	for(w=0;w<10;w++) 
+		{ 
+			D[v][w]=G->edge[v][w]; 
+				for(u=0;u<10;u++) 
+					p[v][w][u]=0; 
+			if(D[v][w]<10000) 
+			{ 
+				p[v][w][v]=1;p[v][w][w]=1; 
+			} 
+		} 
+	for(u=0;u<10;u++) 
+	for(v=0;v<10;v++) 
+	for(w=0;w<10;w++) 
+	if(D[v][u]+D[u][w]<D[v][w]) 
+		{ 
+			D[v][w]=D[v][u]+D[u][w]; 
+					for(i=0;i<10;i++) 
+						p[v][w][i]=p[v][u][i]||p[u][w][i]; 
+		} 
+
+	while(flag) 
+	{ 
+		printf("请输入出发点和目的地的编号:"); 
+			scanf("%d%d",&k,&j); 
+		if(k<0||k>10||j<0||j>10) 
+		{ 
+			printf("景点编号不存在!请重新输入出发点和目的地的编号:"); 
+			scanf("%d%d",&k,&j); 
+		} 
+		if(k>=0&&k<10&&j>=0&&j<10) 
+		flag=0; 
+	} 
+	printf("%s",G->school[k].name); 
+	for(u=0;u<10;u++) 
+	if(p[k][j][u]&&k!=u&&j!=u) 
+		printf("-->%s",G->school[u].name); 
+		printf("-->%s",G->school[j].name); 
+		printf(" 总路线长%dm\n",D[k][j]); 
+}
+
+
+
+void Search(MTGraph *G) 
+{ 
+	int k,flag=1; 
+	while(flag) 
+		{ 
+			printf("请输入要查询的景点编号:"); 
+			scanf("%d",&k); 
+			if(k<0||k>10) 
+			{ 
+			printf("景点编号不存在!请重新输入景点编号:"); 
+			scanf("%d",&k); 
+			} 
+			if(k>0&&k<=10) 
+			flag=0; 
+		} 
+	    k--;
+		printf("*****************************************************************************\n"); 
+		printf("┃编号┃景点名称 ┃简介\n"); 
+		printf(" %-5d %-14s %-50s \n",G->school[k].num,G->school[k].name,G->school[k].pro); 
+		printf("*****************************************************************************\n"); 
+
+}
+
+
+
+
+
+
+
+
+
+

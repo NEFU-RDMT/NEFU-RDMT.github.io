@@ -1,0 +1,105 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#define MAXNODE 100
+typedef struct arc
+{ int adjvex;
+  struct arc *next;
+}ArcNode;
+typedef struct
+{char vertex[10];
+int ID;
+ ArcNode *firstarc;
+}VerNode;
+typedef struct
+{VerNode vertics[MAXNODE];
+ int vexnum,arcnum;
+}AlGraph;
+
+typedef struct 
+{ int top;
+  int data[MAXNODE];
+ 
+}Seqstack;
+
+int visited[MAXNODE];
+int indegree[MAXNODE];
+char xuxie[MAXNODE];
+//Seqstack s;
+AlGraph create()
+{ AlGraph M;
+  ArcNode *q;
+  int i,j,m,n;
+  int a,b;
+  printf("请输入结点数和边数:\n");
+  scanf("%d",&M.vexnum);
+  scanf("%d",&M.arcnum);
+  printf("input the value of vex:\n");
+  for(i=0;i<M.vexnum;i++)
+  {
+    
+	scanf("%s",&M.vertics[i].vertex);
+	M.vertics[i].firstarc=NULL;
+M.vertics[i].ID=0;
+  }     
+  printf("Please input the edge of the graph\n");
+  for(j=0;j<M.arcnum;j++)
+  { scanf("%d %d",&a,&b);
+    q=(ArcNode*)malloc(sizeof(ArcNode));
+    q->adjvex=b;
+	q->next=M.vertics[a].firstarc;
+    
+    M.vertics[a].firstarc=q;
+    M.vertics[b].ID++;
+  } 
+ 
+  return M;
+}
+
+void display(AlGraph M)
+{ int i;
+  ArcNode *p;
+ 
+ for(i=0;i<M.vexnum;i++)
+  { 
+                    
+  printf("%s ",M.vertics[i].vertex);
+  printf("->");
+	p=M.vertics[i].firstarc;
+	while(p!=NULL)
+	{printf("%s->",M.vertics[p->adjvex].vertex);
+	 p=p->next;
+	}
+   printf("NULL\n");
+  }
+}
+
+
+
+int TopologicalSort(AlGraph G)
+{int i,k,count,top=0,stack[50];
+ArcNode *p;
+printf("\nTopologiSort is \n");
+for(i=0;i<G.vexnum;i++)
+if(!G.vertics[i].ID) stack[top++]=i;
+count=0;
+while(top!=0)
+{i=stack[--top];
+if (count==0) printf("%s",G.vertics[i].vertex);
+else printf("-->%s",G.vertics[i].vertex);
+count++;
+for(p=G.vertics[i].firstarc;p;p=p->next)
+if (!--G.vertics[p->adjvex].ID)stack[top++]=p->adjvex;
+}
+if (count<G.vexnum)
+return 1; else return 0;
+}
+int main(int argc, char *argv[])
+{ int i,j;
+  AlGraph N;
+  N=create();
+  display(N); 
+  if(!TopologicalSort(N))printf("Toposort is not success!");
+  system("PAUSE");	
+  return 0;
+}

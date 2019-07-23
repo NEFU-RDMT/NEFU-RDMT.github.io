@@ -1,0 +1,174 @@
+#include "stdio.h"
+#define stacksize 100
+
+typedef struct{
+        char data[100];
+		int top;}s1;
+
+s1 s;
+
+
+ void Initstack();
+ void push(char x);
+ char pop();
+ char GetTop();
+ void Transinto(char *e,char *f);
+ int  priority(char op);
+ float evalpost (char f[]);
+ float readnumber(char f[],int *i);
+
+
+ void Initstack()
+ {s.top=-1;}
+
+ void push(char x)
+ { if(s.top==stacksize-1)
+    printf("栈满");
+   else{
+	 s.top++;
+	 s.data[s.top]=x;
+     printf("%c 入栈!\n",x);
+	   }
+ }
+
+
+ char pop()
+ { char c;
+  if(s.top==-1)
+     printf(" 栈空!");
+	else { c=s.data[s.top--];
+		   printf("%c 出栈\n",c);
+		   return c;
+		  }
+ }
+
+
+char GetTop()
+{ if(s.top==-1)
+   printf("栈空 !");	
+ else return s.data[s.top];
+}
+
+
+
+ int  main()
+  {char e[100],f[100];
+    printf("请输入表达式以@结束 :");
+    scanf("%s",e);
+    Transinto(e,f);
+    printf("%s\n",f);
+	printf("表达式结果是 %f\n",evalpost(f));
+	return 0 ;
+ }
+
+
+
+void Transinto(char *e,char* f)
+{ char t,t1;
+  int i=0,j=0,k1=0,k2=0;
+  Initstack();
+  push('#');
+  while(e[i]!='@')
+  {
+ switch(e[i])
+   {
+   case'0':case'1':case'2':case'3':case'4':
+   case'5':case'6':case'7':case'8':case'9': case'.':
+	f[j++]=e[i++];
+	break;
+   case'(':push(e[i++]);break;
+   case')':
+   case'$':do{
+              t=pop();
+              if(++k1==1)f[j++]=' ';
+			  if(t!='('&&t!='#') f[j++]=t;
+             } 
+	      while(t!='('&&t!='#');
+           i++;k1=0;break;
+   case'+':case'-':case'*':case'/':
+		   f[j++]=' ';
+		   while(priority(e[i])<=priority(GetTop()))
+           { t=pop();  f[j++]=t; }
+		   push(e[i++]); break;
+   }
+ }
+ do{ t1=pop();
+     if(++k2==1) f[j++]=' ';
+	 if(t1!='#') f[j++]=t1;
+   }
+  while(s.top!=-1);
+  f[j++]='#';
+  f[j]='\0';
+}
+
+
+
+int  priority(char op)
+{switch(op)
+  {
+    case'(':
+    case'#':return 0;
+    case'+':
+    case'-':return 1;
+    case'*':
+    case'/':return 2;
+   }
+}
+
+
+
+
+float evalpost (char f[])
+{  
+	int i=0,top=0;
+     float x1,x2;
+     float obst[100];
+   while(f[i]!='#')
+   {
+	 if(f[i]>='0'&&f[i]<='9')
+	 {   obst[top]=readnumber(f,&i);
+	     top++;
+	 }
+    else if(f[i]==' ')
+		i++;
+        else
+          {
+		   x2=obst[--top];
+			x1=obst[--top];      
+            switch (f[i])
+              {
+              case'+':obst[top]=x1+x2;break;
+                 case'-':obst[top]=x1-x2;break;
+                 case'*':obst[top]=x1*x2;break;
+				 case'/':obst[top]=x1/x2;break;
+			   }
+			 	top++; i++;
+	        }
+   }
+return obst[0];
+}
+
+
+
+float readnumber(char f[],int *p)
+{ float x=0.0;int k=0;
+  while(f[*p]>='0'&&f[*p]<='9')
+   {
+     x=x*10+(f[*p]-'0');
+     (*p)++;
+    }
+  if(f[*p]=='.')
+  {
+	(*p)++;
+    while(f[*p]>='0'&&f[*p]<='9')
+	{
+	  x=x*10+(f[*p]-'0');
+	  (*p)++;k++;
+	}
+  }
+ while(k!=0)
+ {
+   x=x/10.0;k--;
+ }
+  return (x);
+}
